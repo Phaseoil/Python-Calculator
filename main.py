@@ -1,4 +1,4 @@
-from errors import *
+from  errors import illegalCharacterError, duplicateOperatorError, parenthesisError
 
 #now on Github
 ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " ", "(", ")"}
@@ -11,14 +11,14 @@ def run():
     except TypeError as e:
         print(e)
         return
-    
+
     s = string_format(s, OPERANTS ^ {"(", ")"})
     s = s.split(" ")
 
     for c in s:
         if c == "":
             s.remove("")
-    
+
     s = solve_parantheses(s)
 
     if check_for_dublicate_operants(s):
@@ -26,8 +26,8 @@ def run():
 
     if not check_if_characters_legal(s):
         raise illegalCharacterError
-    
-    print(Math(s))
+
+    print(math(s))
 
 def solve_parantheses(s):
     if "(" in s and ")" not in s or ")" in s and "(" not in s:
@@ -42,12 +42,12 @@ def solve_parantheses(s):
                 start = i
             if s[i] == ")":
                 end = i
-                if start == None:
+                if start is None:
                     raise parenthesisError
                 s = replace_parenthesis_with_result(s, start, end)
-                
+
             i += 1
-    
+
     return s
 
             
@@ -62,7 +62,7 @@ def check_if_characters_legal(s):
                 return False
     return True
 
-def Math(s):
+def math(s):
     i = 0
 
     while i < len(s):
@@ -106,17 +106,17 @@ def replace_parenthesis_with_result(s, start, end):
     remove_parentheses(temp)
     print(temp)
 
-    result = Math(temp)
+    result = math(temp)
     print(result)
     remove_slice_from_list(s, s[start:end], start+1)
     s[start] = str(int(result))
     print(s)
-    
+
     return s
 
-def remove_slice_from_list(list, slice, start):
-    for i in range(len(slice)):
-        list.pop(start)
+def remove_slice_from_list(li, listslice, start):
+    for i in range(len(listslice)):
+        li.pop(start)
 
 
 def remove_parentheses(s):
@@ -132,12 +132,12 @@ def apply_result_to_array(s, i, n):
     s.pop(i - 1)
     s.pop(i)
 
-def string_format(s, list):
+def string_format(s, l):
     s = s.replace(" ", "")
 
     i = 0
     while i < len(s):
-        if s[i] in list:
+        if s[i] in l:
             s = insert_space(s, i)
             s = insert_space(s, i+2)
             i += 1
