@@ -1,4 +1,4 @@
-from  errors import IllegalCharacterError, DuplicateOperatorError, ParenthesisError
+import errors
 
 #now on Github
 ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " ", "(", ")"}
@@ -15,23 +15,22 @@ def run():
     s = string_format(s, OPERANTS ^ {"(", ")"})
     s = s.split(" ")
 
-    for c in s:
-        if c == "":
-            s.remove("")
+    while "" in s:
+        s.remove("")
 
     s = solve_parantheses(s)
 
     if check_for_dublicate_operants(s):
-        raise DuplicateOperatorError
+        raise errors.DuplicateOperatorError
 
     if not check_if_characters_legal(s):
-        raise IllegalCharacterError
+        raise errors.IllegalCharacterError
 
     print(math(s))
 
 def solve_parantheses(s):
     if "(" in s and ")" not in s or ")" in s and "(" not in s:
-        raise ParenthesisError
+        raise errors.ParenthesisError
 
     while "(" and ")" in s:
         start = None
@@ -43,7 +42,7 @@ def solve_parantheses(s):
             if s[i] == ")":
                 end = i
                 if start is None:
-                    raise ParenthesisError
+                    raise errors.ParenthesisError
                 s = replace_parenthesis_with_result(s, start, end)
 
             i += 1
