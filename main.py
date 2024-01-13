@@ -1,8 +1,8 @@
 import errors
 
 #now on Github
-ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " ", "(", ")"}
-OPERANTS = {"+", "-", "*", "%", "/"}
+ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", "^", "\\", " ", "(", ")"}
+OPERANTS = {"+", "-", "*", "%", "/", "^", "\\"}
 
 
 def run():
@@ -20,6 +20,7 @@ def run():
 
     s = solve_parantheses(s)
 
+
     if check_for_dublicate_operants(s):
         raise errors.DuplicateOperatorError
 
@@ -29,9 +30,6 @@ def run():
     print(math(s))
 
 def solve_parantheses(s):
-    if "(" in s and ")" not in s or ")" in s and "(" not in s:
-        raise errors.ParenthesisError
-
     while "(" and ")" in s:
         start = None
         end = None
@@ -44,9 +42,9 @@ def solve_parantheses(s):
                 if start is None:
                     raise errors.ParenthesisError
                 s = replace_parenthesis_with_result(s, start, end)
-
             i += 1
-
+    if "(" in s and ")" not in s:
+            raise errors.ParenthesisError
     return s
 
       
@@ -67,6 +65,14 @@ def math(s):
     while i < len(s):
         if s[i] == "%":
             n = float(s[i - 1]) % float(s[i + 1])
+            apply_result_to_array(s, i, n)
+            i = 0
+        if s[i] == "^":
+            n = float(s[i - 1]) ** float(s[i + 1])
+            apply_result_to_array(s, i, n)
+            i = 0
+        if s[i] == "\\":
+            n = float(s[i - 1]) ** (1 / float(s[i + 1]))
             apply_result_to_array(s, i, n)
             i = 0
         i += 1
