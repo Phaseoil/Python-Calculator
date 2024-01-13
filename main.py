@@ -1,6 +1,6 @@
 #now on Github
-ALLOWED_CHARS = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " ")
-OPERANTS = ("+", "-", "*", "%", "/")
+ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " "}
+OPERANTS = {"+", "-", "*", "%", "/"}
 
 
 def run():
@@ -22,7 +22,7 @@ def run():
         return
 
     if not check_if_characters_legal(s):
-        print(f"you used illegal characters, legal characters are: {ALLOWED_CHARS}")
+        print(f"you used illegal characters, legal characters are: {ALLOWED_CHARS ^ set([" "])}")
         return
     
     print(Math(s))
