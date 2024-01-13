@@ -12,6 +12,6 @@ class duplicateOperatorError(Exception):
         super().__init__(self.message)
 
 class illegalCharacterError(Exception):
-    def __init__(self, message=f"you used illegal characters, legal characters are: {ALLOWED_CHARS ^ set([" "])}"):
+    def __init__(self, message=f"you used illegal characters, legal characters are: {ALLOWED_CHARS ^ set([' '])}"):
         self.message = message
         super().__init__(self.message)
