@@ -1,5 +1,7 @@
+from errors import *
+
 #now on Github
-ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " "}
+ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", " ", "(", ")"}
 OPERANTS = {"+", "-", "*", "%", "/"}
 
 
@@ -10,22 +12,44 @@ def run():
         print(e)
         return
     
-    s = string_format(s)
-
+    s = string_format(s, OPERANTS ^ {"(", ")"})
     s = s.split(" ")
 
-    if "" in s:
-        s.remove("")
+    for c in s:
+        if c == "":
+            s.remove("")
+    
+    s = solve_parantheses(s)
 
     if check_for_dublicate_operants(s):
-        print(f"you have used two operants in conjuction, this is not a mathematical expression. usable operands are: {OPERANTS}")
-        return
+        raise duplicateOperatorError
 
     if not check_if_characters_legal(s):
-        print(f"you used illegal characters, legal characters are: {ALLOWED_CHARS ^ set([" "])}")
-        return
+        raise illegalCharacterError
     
     print(Math(s))
+
+def solve_parantheses(s):
+    if "(" in s and ")" not in s or ")" in s and "(" not in s:
+        raise parenthesisError
+    
+    while "(" and ")" in s:
+        start = None
+        end = None
+        i = 0
+        while i < len(s):
+            if s[i] == "(":
+                start = i
+            if s[i] == ")":
+                end = i
+                if start == None:
+                    raise parenthesisError
+                s = replace_parenthesis_with_result(s, start, end)
+                
+            i += 1
+    
+    return s
+
             
 def check_if_characters_legal(s):
     for c in s:
@@ -76,17 +100,44 @@ def Math(s):
 
     return s[0]
 
+def replace_parenthesis_with_result(s, start, end):
+    temp = s[start:end+1]
+    print(temp)
+    remove_parentheses(temp)
+    print(temp)
+
+    result = Math(temp)
+    print(result)
+    remove_slice_from_list(s, s[start:end], start+1)
+    s[start] = str(int(result))
+    print(s)
+    
+    return s
+
+def remove_slice_from_list(list, slice, start):
+    for i in range(len(slice)):
+        list.pop(start)
+
+
+def remove_parentheses(s):
+    i = 0
+    while i < len(s):
+        if s[i] == "(" or s[i] == ")":
+            s.pop(i)
+            i = 0
+        i += 1
+
 def apply_result_to_array(s, i, n):
     s[i] = n
     s.pop(i - 1)
     s.pop(i)
 
-def string_format(s):
+def string_format(s, list):
     s = s.replace(" ", "")
 
     i = 0
     while i < len(s):
-        if s[i] in OPERANTS:
+        if s[i] in list:
             s = insert_space(s, i)
             s = insert_space(s, i+2)
             i += 1
