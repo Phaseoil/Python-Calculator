@@ -30,7 +30,9 @@ def run():
     print(math(s))
 
 def solve_parantheses(s):
-    while "(" and ")" in s:
+    while "(" in s or ")" in s:
+        if "(" in s and ")" not in s:
+            raise errors.ParenthesisError
         start = None
         end = None
         i = 0
@@ -43,8 +45,6 @@ def solve_parantheses(s):
                     raise errors.ParenthesisError
                 s = replace_parenthesis_with_result(s, start, end)
             i += 1
-    if "(" in s and ")" not in s:
-            raise errors.ParenthesisError
     return s
 
       
