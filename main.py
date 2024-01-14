@@ -9,8 +9,7 @@ def run():
     try:
         s = str(input("Input your equation: "))
     except TypeError as e:
-        print(e)
-        return
+        raise e
 
     s = string_format(s, OPERANTS ^ {"(", ")"})
     s = s.split(" ")
@@ -19,7 +18,6 @@ def run():
         s.remove("")
 
     s = solve_parantheses(s)
-
 
     if check_for_dublicate_operants(s):
         raise errors.DuplicateOperatorError
@@ -31,22 +29,24 @@ def run():
 
 def solve_parantheses(s):
     while "(" in s or ")" in s:
-        if "(" in s and ")" not in s:
+        if ")" not in s:
             raise errors.ParenthesisError
         start = None
         end = None
         i = 0
         while i < len(s):
             if s[i] == "(":
+                print(i)
                 start = i
             if s[i] == ")":
                 end = i
                 if start is None:
                     raise errors.ParenthesisError
                 s = replace_parenthesis_with_result(s, start, end)
+                i += 1
+                break
             i += 1
     return s
-
       
 def check_if_characters_legal(s):
     for c in s:
@@ -63,10 +63,6 @@ def math(s):
     i = 0
 
     while i < len(s):
-        if s[i] == "%":
-            n = float(s[i - 1]) % float(s[i + 1])
-            apply_result_to_array(s, i, n)
-            i = 0
         if s[i] == "^":
             n = float(s[i - 1]) ** float(s[i + 1])
             apply_result_to_array(s, i, n)
@@ -80,6 +76,10 @@ def math(s):
     i = 0
 
     while i < len(s):
+        if s[i] == "%":
+            n = float(s[i - 1]) % float(s[i + 1])
+            apply_result_to_array(s, i, n)
+            i = 0
         if s[i] == "*":
             n = float(s[i - 1]) * float(s[i + 1])
             apply_result_to_array(s, i, n)
@@ -107,15 +107,12 @@ def math(s):
 
 def replace_parenthesis_with_result(s, start, end):
     temp = s[start:end+1]
-    print(temp)
     remove_parentheses(temp)
-    print(temp)
 
     result = math(temp)
-    print(result)
     remove_slice_from_list(s, s[start:end], start+1)
     s[start] = str(int(result))
-    print(s)
+
 
     return s
 
