@@ -36,7 +36,6 @@ def solve_parantheses(s):
         i = 0
         while i < len(s):
             if s[i] == "(":
-                print(i)
                 start = i
             if s[i] == ")":
                 end = i
