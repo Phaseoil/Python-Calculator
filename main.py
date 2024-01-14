@@ -1,7 +1,7 @@
 import errors
 
 #now on Github
-ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", "^", "\\", " ", "(", ")"}
+ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", "^", "\\", " ", "(", ")", "."}
 OPERANTS = {"+", "-", "*", "%", "/", "^", "\\"}
 
 
@@ -117,7 +117,7 @@ def replace_parenthesis_with_result(s, start, end):
     if result == []:
         s.pop(start)
     else:
-        s[start] = str(int(result))
+        s[start] = str(float(result))
     return s
 
 def remove_slice_from_list(li, end, start):
