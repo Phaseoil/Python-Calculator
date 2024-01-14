@@ -14,8 +14,7 @@ def run():
     s = string_format(s, OPERANTS ^ {"(", ")"})
     s = s.split(" ")
 
-    while "" in s:
-        s.remove("")
+    s = list(filter(lambda x: x != "", s))
 
     s = solve_parantheses(s)
 
@@ -25,7 +24,11 @@ def run():
     if not check_if_characters_legal(s):
         raise errors.IllegalCharacterError
 
-    print(math(s))
+    final = math(s)
+    if final == []:
+        print("there is no result")
+    else:
+        print(final)
 
 def solve_parantheses(s):
     while "(" in s or ")" in s:
@@ -101,32 +104,32 @@ def math(s):
             apply_result_to_array(s, i, n)
             i = 0
         i += 1
-
+    if len(s) == 0:
+        return s
     return s[0]
 
 def replace_parenthesis_with_result(s, start, end):
     temp = s[start:end+1]
-    remove_parentheses(temp)
+    temp = remove_parentheses(temp)
 
     result = math(temp)
-    remove_slice_from_list(s, s[start:end], start+1)
-    s[start] = str(int(result))
-
-
+    s = remove_slice_from_list(s, end, start+1)
+    if result == []:
+        s.pop(start)
+    else:
+        s[start] = str(int(result))
     return s
 
-def remove_slice_from_list(li, listslice, start):
-    for i in range(len(listslice)):
-        li.pop(start)
+def remove_slice_from_list(li, end, start):
+    indices_to_remove = set(range(start, end+1))
+    li = [x for i, x in enumerate(li) if i not in indices_to_remove]
+    return li
 
 
 def remove_parentheses(s):
-    i = 0
-    while i < len(s):
-        if s[i] == "(" or s[i] == ")":
-            s.pop(i)
-            i = 0
-        i += 1
+    parentheses = {'(', ')'}
+    s = [x for  x in s if x not in parentheses]
+    return s
 
 def apply_result_to_array(s, i, n):
     s[i] = n
