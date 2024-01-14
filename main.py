@@ -70,7 +70,7 @@ def math(s):
             apply_result_to_array(s, i, n)
             i = 0
         if s[i] == "\\":
-            n = float(s[i - 1]) ** (1 / float(s[i + 1]))
+            n = float(s[i + 1]) ** (1 / float(s[i - 1]))
             apply_result_to_array(s, i, n)
             i = 0
         i += 1
