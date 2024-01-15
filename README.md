@@ -1,7 +1,7 @@
 # Python-Calculator
 a calculator made using Python.
 
-As of now this project supports the following operations:
+As of now this project supports the following:
 - Basic math (+, -, *, /, %)
 - The use of parentheses
 - Raising something to the nth power, this uses ^ as the operator and raises whatever is before the operator to the power of what comes after, this may be applied to parentheses.
