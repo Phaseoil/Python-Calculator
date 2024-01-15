@@ -2,6 +2,7 @@ import errors
 
 #now on Github
 ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", "^", "\\", " ", "(", ")", "."}
+SPECIAL_CHARS = {"e": "2.71828182845", "pi": "3.14159265358"}
 OPERANTS = {"+", "-", "*", "%", "/", "^", "\\"}
 
 
@@ -10,8 +11,11 @@ def run():
         s = str(input("Input your equation: "))
     except TypeError as e:
         raise e
+    
+    s = replace_special_characters(s)
 
     s = string_format(s, OPERANTS ^ {"(", ")"})
+    
     s = s.split(" ")
 
     s = list(filter(lambda x: x != "", s))
@@ -30,6 +34,12 @@ def run():
     else:
         print(final)
 
+def replace_special_characters(s):
+    for c in SPECIAL_CHARS:
+        if c in s:
+            s = s.replace(c, SPECIAL_CHARS.get(c))
+    return s
+    
 def solve_parantheses(s):
     while "(" in s or ")" in s:
         if ")" not in s:
@@ -139,13 +149,9 @@ def apply_result_to_array(s, i, n):
 def string_format(s, l):
     s = s.replace(" ", "")
 
-    i = 0
-    while i < len(s):
-        if s[i] in l:
-            s = insert_space(s, i)
-            s = insert_space(s, i+2)
-            i += 1
-        i += 1
+    for c in l:
+        if c in s:
+            s = s.replace(c, f" {c} ")
     return s
 
 def insert_space(string, index):
