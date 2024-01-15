@@ -12,11 +12,11 @@ def run():
     except TypeError as e:
         raise e
     
-    s = replace_special_characters(s)
-
     s = string_format(s, OPERANTS ^ {"(", ")"})
     
     s = s.split(" ")
+
+    replace_special_characters(s)
 
     s = list(filter(lambda x: x != "", s))
 
@@ -35,10 +35,9 @@ def run():
         print(final)
 
 def replace_special_characters(s):
-    for c in SPECIAL_CHARS:
-        if c in s:
-            s = s.replace(c, SPECIAL_CHARS.get(c))
-    return s
+    for i, c in enumerate(s):
+        if c in SPECIAL_CHARS:
+            s[i] = SPECIAL_CHARS.get(c)
     
 def solve_parantheses(s):
     while "(" in s or ")" in s:
