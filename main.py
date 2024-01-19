@@ -1,4 +1,6 @@
 import errors
+import math
+import re
 
 #now on Github
 ALLOWED_CHARS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "%", "^", "\\", " ", "(", ")", "."}
@@ -11,12 +13,14 @@ def run():
         s = str(input("Input your equation: "))
     except TypeError as e:
         raise e
-    
-    s = string_format(s, OPERANTS ^ {"(", ")"})
-    
-    s = s.split(" ")
+
+    s = string_format(s, OPERANTS)
 
     replace_special_characters(s)
+    
+    s = handle_sin_cos_tan(s) 
+    
+    s = string_format("".join(s), OPERANTS ^ {"(", ")"})
 
     s = list(filter(lambda x: x != "", s))
 
@@ -28,11 +32,30 @@ def run():
     if not check_if_characters_legal(s):
         raise errors.IllegalCharacterError
 
-    final = math(s)
+    final = operations(s)
     if final == []:
         print("there is no result")
     else:
         print(final)
+        
+def handle_sin_cos_tan(l):
+    for i, s in enumerate(l):
+        regex_sin = re.search(r"sin\(.+\)", s)
+        regex_cos = re.search(r"cos\(.+\)", s)
+        regex_tan = re.search(r"tan\(.+\)", s)
+        if regex_sin is not None:
+            x = list(filter(lambda x: x not in ["s", "i", "n", "(", ")"], s))
+            replace_special_characters(x)
+            l[i] = str(math.sin(math.radians(float("".join(x)))))
+        if regex_cos is not None:
+            x = list(filter(lambda x: x not in ["c", "o", "s", "(", ")"], s))
+            replace_special_characters(x)
+            l[i] = str(math.cos(math.radians(float("".join(x)))))
+        if regex_tan is not None:
+            x = list(filter(lambda x: x not in ["t", "a", "n", "(", ")"], s))
+            replace_special_characters(x)
+            l[i] = str(math.tan(math.radians(float("".join(x)))))
+    return l
 
 def replace_special_characters(s):
     for i, c in enumerate(s):
@@ -70,7 +93,7 @@ def check_if_characters_legal(s):
                 return False
     return True
 
-def math(s):
+def operations(s):
     i = 0
 
     while i < len(s):
@@ -121,7 +144,7 @@ def replace_parenthesis_with_result(s, start, end):
     temp = s[start:end+1]
     temp = remove_parentheses(temp)
 
-    result = math(temp)
+    result = operations(temp)
     s = remove_slice_from_list(s, end, start+1)
     if result == []:
         s.pop(start)
@@ -133,7 +156,6 @@ def remove_slice_from_list(li, end, start):
     indices_to_remove = set(range(start, end+1))
     li = [x for i, x in enumerate(li) if i not in indices_to_remove]
     return li
-
 
 def remove_parentheses(s):
     parentheses = {'(', ')'}
@@ -151,7 +173,7 @@ def string_format(s, l):
     for c in l:
         if c in s:
             s = s.replace(c, f" {c} ")
-    return s
+    return s.split(" ")
 
 def insert_space(string, index):
     return string[:index] + ' ' + string[index:]
