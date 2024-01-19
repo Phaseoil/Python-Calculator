@@ -8,3 +8,4 @@ As of now this project supports the following:
  note: empty parentheses will simply be removed.
 - The nth root, this uses \ as the operator and takes the 'what comes before the operator'th root of whatever comes after the operator, this may be applied to parentheses.
 - the special numbers pi and e, they work by just typing them in. (e, pi)
+- sine, cosine and tangent. they also work by simply typing them, f.e. **sin(number)**.
